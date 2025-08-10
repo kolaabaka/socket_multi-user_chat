@@ -14,7 +14,7 @@ public class Server extends Thread {
 
     private static final Integer PORT = 4444;
 
-    private final Map<Integer, Socket> userMap = new HashMap<>();
+    private static final Map<Integer, Socket> userMap = new HashMap<>();
     private final BlockingQueue<String> qu = new LinkedBlockingQueue<>();
 
     public Server() {
@@ -44,6 +44,11 @@ public class Server extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void deleteConnection(int userId){
+        userMap.remove(userId);
+        System.out.println("Connection close; userId: " + userId);
     }
 
 }

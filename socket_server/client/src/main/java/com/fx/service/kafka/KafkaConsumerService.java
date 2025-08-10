@@ -20,9 +20,9 @@ public class KafkaConsumerService extends Thread {
     @Override
     public void run() {
         while (true) {
-            ConsumerRecords<String, String> rec = consumer.poll(1);
-            for (var reca : rec) {
-                System.out.println(reca.offset() + " " + reca.value());
+            ConsumerRecords<String, String> recordsKafka = consumer.poll(10000);
+            for (var record : recordsKafka) {
+                System.out.println(record.offset() + " " + record.value());
             }
         }
     }

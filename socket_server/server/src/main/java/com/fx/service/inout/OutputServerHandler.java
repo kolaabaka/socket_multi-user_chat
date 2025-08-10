@@ -3,7 +3,6 @@ package com.fx.service.inout;
 import com.fx.service.MessageParser;
 import com.fx.service.kafka.KafkaProducerService;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Map;
@@ -29,10 +28,10 @@ public class OutputServerHandler extends Thread {
                 var messagDto = MessageParser.parseMessage(message);
                 var userTo = userMap.get(Integer.parseInt(messagDto.to()));
                 if (userTo == null) {
-                    kafksService.sendMessage(messagDto.to(), messagDto.message());
+                    kafksService.sendMessage(messagDto.to(), messagDto.toString());
                 } else {
                     var outTo = userTo.getOutputStream();
-                    outTo.write((messagDto.message() + "\n").getBytes());
+                    outTo.write((messagDto + "\n").getBytes());
                     outTo.flush();
                 }
             } catch (InterruptedException | IOException | ExecutionException e) {

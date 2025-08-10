@@ -21,7 +21,7 @@ public class ClientMain {
             var in = socket.getInputStream();
             var out = socket.getOutputStream();
 
-            //Loggin client ID
+            //Logging client ID
             out.write(id);
             out.flush();
 

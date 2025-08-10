@@ -7,12 +7,12 @@ import java.util.concurrent.BlockingQueue;
 
 public class InputServerHandler extends Thread {
 
-    private final InputStream input;
+    private final InputStream inputStream;
     private final int idUser;
     private final BlockingQueue qu;
 
-    public InputServerHandler(InputStream input, int idUser, BlockingQueue qu) {
-        this.input = input;
+    public InputServerHandler(InputStream inputStream, int idUser, BlockingQueue qu) {
+        this.inputStream = inputStream;
         this.idUser = idUser;
         this.qu = qu;
     }
@@ -21,7 +21,7 @@ public class InputServerHandler extends Thread {
     public void run() {
         while (true) {
             try {
-                BufferedReader buf = new BufferedReader(new InputStreamReader(input));
+                BufferedReader buf = new BufferedReader(new InputStreamReader(inputStream));
                 var bufStr = buf.readLine();
                 qu.add(bufStr);
             } catch (Exception e) {

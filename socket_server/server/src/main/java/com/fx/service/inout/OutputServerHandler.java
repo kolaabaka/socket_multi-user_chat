@@ -32,7 +32,7 @@ public class OutputServerHandler extends Thread {
                     kafksService.sendMessage(messagDto.to(), messagDto.message());
                 } else {
                     var outTo = userTo.getOutputStream();
-                    outTo.write(messagDto.message().getBytes());
+                    outTo.write((messagDto.message() + "\n").getBytes());
                     outTo.flush();
                 }
             } catch (InterruptedException | IOException | ExecutionException e) {

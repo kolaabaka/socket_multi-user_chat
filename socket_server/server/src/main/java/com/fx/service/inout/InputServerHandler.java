@@ -5,13 +5,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.BlockingQueue;
 
-public class InputHandler extends Thread {
+public class InputServerHandler extends Thread {
 
     private final InputStream input;
     private final int idUser;
     private final BlockingQueue qu;
 
-    public InputHandler(InputStream input, int idUser, BlockingQueue qu) {
+    public InputServerHandler(InputStream input, int idUser, BlockingQueue qu) {
         this.input = input;
         this.idUser = idUser;
         this.qu = qu;
@@ -23,7 +23,6 @@ public class InputHandler extends Thread {
             try {
                 BufferedReader buf = new BufferedReader(new InputStreamReader(input));
                 var bufStr = buf.readLine();
-                System.out.println(bufStr + " FROM INPUT HANDLER");
                 qu.add(bufStr);
             } catch (Exception e) {
                 e.printStackTrace();

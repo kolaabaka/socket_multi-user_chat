@@ -5,7 +5,7 @@ import com.fx.dto.MessageDTO;
 public class MessageParser {
 
     public static MessageDTO parseMessage(String message) {
-        String[] messageArgs = message.split(".");
+        String[] messageArgs = message.split("\\.");
         if(messageArgs.length != 4){
             throw new RuntimeException("Message size out of bounds");
         }

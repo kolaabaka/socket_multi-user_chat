@@ -1,18 +1,21 @@
 package com.fx.service.inout;
 
 import com.fx.service.MessageParser;
+import com.fx.service.kafka.KafkaProducerService;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 
-public class OutputHandler extends Thread {
+public class OutputServerHandler extends Thread {
     private final BlockingQueue<String> qu;
     private Map<Integer, Socket> userMap;
+    private final KafkaProducerService kafksService = new KafkaProducerService();
 
-    public OutputHandler(BlockingQueue<String> qu, Map<Integer, Socket> userMap) {
+    public OutputServerHandler(BlockingQueue<String> qu, Map<Integer, Socket> userMap) {
         this.qu = qu;
         this.userMap = userMap;
     }
@@ -24,15 +27,15 @@ public class OutputHandler extends Thread {
                 String message = qu.take();
                 System.out.println(message + " FROM SERVER");
                 var messagDto = MessageParser.parseMessage(message);
-                var userTo = userMap.getOrDefault(messagDto.to(), null);
+                var userTo = userMap.get(Integer.parseInt(messagDto.to()));
                 if (userTo == null) {
-                    throw new AccountNotFoundException();
+                    kafksService.sendMessage(messagDto.to(), messagDto.message());
                 } else {
                     var outTo = userTo.getOutputStream();
-                    outTo.write(messagDto.Message().getBytes());
+                    outTo.write(messagDto.message().getBytes());
                     outTo.flush();
                 }
-            } catch (InterruptedException | AccountNotFoundException | IOException e) {
+            } catch (InterruptedException | IOException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }

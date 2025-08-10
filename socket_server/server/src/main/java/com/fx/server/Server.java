@@ -1,7 +1,7 @@
 package com.fx.server;
 
-import com.fx.service.inout.InputHandler;
-import com.fx.service.inout.OutputHandler;
+import com.fx.service.inout.InputServerHandler;
+import com.fx.service.inout.OutputServerHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,7 +15,6 @@ public class Server extends Thread {
     private static final Integer PORT = 4444;
 
     private final Map<Integer, Socket> userMap = new HashMap<>();
-    private final Random randomizer = new Random();
     private final BlockingQueue<String> qu = new LinkedBlockingQueue<>();
 
     public Server() {
@@ -24,26 +23,23 @@ public class Server extends Thread {
 
     @Override
     public void run() {
+
         try (ServerSocket socket = new ServerSocket(PORT)) {
 
             System.out.println("SERVER STARTED; PORT " + PORT);
-            int randomId;
 
-            OutputHandler thOut = new OutputHandler(qu, userMap);
+            OutputServerHandler thOut = new OutputServerHandler(qu, userMap);
             thOut.start();
 
             while (true) {
                 Socket client = socket.accept();
+                var id = client.getInputStream().read();
 
-                randomId = randomizer.nextInt(32);
-
-                Thread thIn = new InputHandler(client.getInputStream(), randomId, qu);
+                Thread thIn = new InputServerHandler(client.getInputStream(), id, qu);
                 thIn.start();
 
-                userMap.put(randomId, client);
-                var inp = client.getOutputStream();
-                inp.write((randomId + "\n").getBytes());
-                inp.flush();
+                userMap.put(id, client);
+                System.out.println(userMap);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import java.time.Duration;
 import java.util.*;
 
 public class KafkaConsumerService extends Thread {
@@ -20,7 +21,7 @@ public class KafkaConsumerService extends Thread {
     @Override
     public void run() {
         while (true) {
-            ConsumerRecords<String, String> recordsKafka = consumer.poll(10000);
+            ConsumerRecords<String, String> recordsKafka = consumer.poll(Duration.ofSeconds(3));
             for (var record : recordsKafka) {
                 System.out.println(record.offset() + " " + record.value());
             }
@@ -31,6 +32,7 @@ public class KafkaConsumerService extends Thread {
         Properties kafkaProp = new Properties();
         kafkaProp.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         kafkaProp.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group-id");
+        kafkaProp.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         kafkaProp.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         kafkaProp.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         return kafkaProp;

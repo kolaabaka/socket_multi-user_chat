@@ -13,9 +13,9 @@ public class KafkaProducerService {
 
     private KafkaProducer<String, String> producer;
 
-    public KafkaProducerService() {
+    public KafkaProducerService(String ipAddres) {
         Properties kafkaProp = new Properties();
-        kafkaProp.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        kafkaProp.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ipAddres);
         kafkaProp.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         kafkaProp.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         kafkaProp.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");

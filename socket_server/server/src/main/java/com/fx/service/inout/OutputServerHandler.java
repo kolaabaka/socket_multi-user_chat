@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 public class OutputServerHandler extends Thread {
     private final BlockingQueue<String> qu;
     private Map<Integer, Socket> userMap;
-    private final KafkaProducerService kafksService = new KafkaProducerService();
+    private final KafkaProducerService kafksService = new KafkaProducerService("localhost:9092");
 
     public OutputServerHandler(BlockingQueue<String> qu, Map<Integer, Socket> userMap) {
         this.qu = qu;
